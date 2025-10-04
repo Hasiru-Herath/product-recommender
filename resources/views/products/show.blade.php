@@ -7,22 +7,29 @@
 <p><strong>Category:</strong> {{ $product->category }}</p>
 <p><strong>Description:</strong> {{ $product->description }}</p>
 
+<form action="{{ route('wishlist.add', $product->id) }}" method="POST" class="d-inline">
+    @csrf
+    <button type="submit" class="btn btn-sm btn-warning">Add to Wishlist ❤️</button>
+</form>
+
 <hr>
 <h4>Recommended Products</h4>
 <div class="row">
     @forelse($recommendations as $rec)
-        <div class="col-md-3">
-            <div class="card mb-3">
-                <img src="{{ $rec->image ? asset('storage/'.$rec->image) : 'https://via.placeholder.com/150' }}" class="card-img-top">
-                <div class="card-body">
-                    <h6>{{ $rec->name }}</h6>
-                    <p>${{ $rec->price }}</p>
-                    <a href="{{ route('products.show', $rec->id) }}" class="btn btn-sm btn-info">View</a>
-                </div>
+    <div class="col-md-3">
+        <div class="card mb-3">
+            <img src="{{ $rec->image ? asset('storage/'.$rec->image) : 'https://via.placeholder.com/150' }}" class="card-img-top">
+            <div class="card-body">
+                <h6>{{ $rec->name }}</h6>
+                <p>${{ $rec->price }}</p>
+                <a href="{{ route('products.show', $rec->id) }}" class="btn btn-sm btn-info">View</a>
+
+
             </div>
         </div>
+    </div>
     @empty
-        <p>No recommendations available</p>
+    <p>No recommendations available</p>
     @endforelse
 </div>
 
@@ -30,10 +37,10 @@
 <h4>Recently Viewed</h4>
 <ul>
     @foreach(session('recently_viewed', []) as $id)
-        @php $recentProduct = \App\Models\Product::find($id); @endphp
-        @if($recentProduct)
-            <li><a href="{{ route('products.show', $recentProduct->id) }}">{{ $recentProduct->name }}</a></li>
-        @endif
+    @php $recentProduct = \App\Models\Product::find($id); @endphp
+    @if($recentProduct)
+    <li><a href="{{ route('products.show', $recentProduct->id) }}">{{ $recentProduct->name }}</a></li>
+    @endif
     @endforeach
 </ul>
 @endsection
